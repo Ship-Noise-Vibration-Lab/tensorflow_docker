@@ -18,6 +18,7 @@
 ***
 
 # System requirements
+
 - Ubuntu 20.04 or Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11
 - (For GPU version) NVIDIA GPU capable of CUDA 11.2 and its drivers
 
@@ -26,19 +27,24 @@
 ## For Windows Machine
 
 ### Install WSL version 2
+
 - Enter this command in an administrator PowerShell or Windows Command Prompt and then restarting your machine.
+
   ```bash
   wsl --install
   ```
 - After restart, type this at PowerSehlll or Windows Command Prompt to confirm your WSL is set to version 2
+
   ```bash
   wsl --set-default-version 2
   ```
 ### Install Ubuntu 20.04 to WSL2
+
 - Follow this link to install Ubuntu 20.04 at Microsoft Store
   - [Ubuntu 20.04 (Microsoft Store)](https://www.microsoft.com/store/productId/9N6SVWS3RX71)
   - Set username and password for the Ubuntu 20.04 while installation
 - Type this at PowerShell or Windows Command Prompt to conform your Ubuntu 20.04 is running with WSL version 2
+
   ```bash
   wsl -v -l
   ```
@@ -46,21 +52,26 @@
   - [Windows Terminal (Microsoft Store)](https://www.microsoft.com/ko-kr/p/windows-terminal/9n0dx20hk701)
 
 ### (For GPU version) Install NVIDIA Grahics Driver for WSL2 Docker
+
 - If you are running only with CPUs, you do not need this
 - Download and install NVIDIA Driver for WSL2
   - [CUDA on Windows Subsystem for Linux (WSL)](https://developer.nvidia.com/cuda/wsl)
 - Check configuration for NVIDIA Graphics Card
   - Run this command inside Ubuntu 20.04 in WSL2
+
     ```bash
     glxinfo | grep OpenGL
     ```
+
     You should see something like following,
+
     ```bash
     OpenGL vendor string: Microsoft Corporation
     OpenGL renderer string: D3D12 (NVIDIA GeForce GTX 1660 Ti)
     OpenGL core profile version string: 3.3 (Core Profile) Mesa 21.0.3 - kisak-mesa PPA
     ```
     If not, do
+
     ```bash
     sudo add-apt-repository ppa:kisak/kisak-mesa && sudo apt-get update && sudo apt dist-upgrade
     ```
@@ -70,6 +81,7 @@
 - If you are running only with CPUs, you do not need this
 - Choose `[proprietrary, tested]` driver on Additional Derivers at Software & Updates. For example, `nvidia-driver-460`
 - To test the correct installation,
+
   ```
   nvidia-smi
   ```
@@ -77,7 +89,9 @@
 # Install Docker
 
 ## For CPU version
+
 - Docker installation
+
   ```bash
   sudo apt-get update
   sudo apt-get install \
@@ -96,7 +110,9 @@
   newgrp docker
 
   ```
+
 - To test docker, run this commands at a new terminal window
+
   ```bash
   # Test docker
   docker run hello-world
@@ -110,7 +126,8 @@
 - Install docker following [CPU version installation above](https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker#for-cpu-version)
 
 - Install NVIDIA docker container runtime
-  ```
+
+  ```bash
   curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
   distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
   curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |\
@@ -122,18 +139,23 @@
   sudo apt-get install -y nvidia-container-runtime nvidia-docker2
 
   ```
+
   And restart docker
+
   ```
   sudo systemctl stop docker
   sudo systemctl start docker
   ```
 
 - Test docker with nvidia gpu
-  ```
+
+  ```bash
   docker run --gpus all nvidia/cuda:11.2.0-cudnn8-runtime-ubuntu20.04 nvidia-smi
   ```
+
   If you see something like this, it's a success
-  ```
+
+  ```bash
   +-----------------------------------------------------------------------------+
   | NVIDIA-SMI 460.91.03    Driver Version: 460.91.03    CUDA Version: 11.2     |
   |-------------------------------+----------------------+----------------------+
@@ -155,12 +177,14 @@
   ```
 
 - Test Tensorflow with gpu
+
   ```bash
   docker run --gpus all -it tensorflow/tensorflow:latest-gpu bash
   ```
 
 - (Optional) For GPU status monitoring
-  ```
+
+  ```bash
   git clone https://github.com/Syllo/nvtop.git && cd nvtop
   sudo docker build --tag nvtop .
   sudo docker run -it --rm --runtime=nvidia --gpus=all --pid=host nvtop
@@ -169,15 +193,19 @@
 # Build and Run
 
 - Clone this repository
-  ```
+
+  ```bash
   mkdir -p ~/SNOVIL
   cd ~/SNOVIL
   git clone https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker.git
   ```
-  Will clone the https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker into a directory `tensorflow_docker`
+
+  This will clone the https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker into a directory `tensorflow_docker`
 
 - Build Docker image (Upto 20 min)
+
   at the `Docker` directory where the Dockerfile is,
+
   ```bash
   cd ~/SNOVIL/tensorflow_docker
   # If CPU
@@ -187,7 +215,9 @@
   ```
 
 - Run Docker image with a python script
+
   at the directory where the python script is,
+
   ```bash
   # At directory where your python script is, (here it's Cylinder2D.py for example)
   # If CPU
