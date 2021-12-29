@@ -184,7 +184,7 @@ Will clone the https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker int
 - Build Docker image (Upto 20 min)
 at the `Docker` directory where the Dockerfile is,
 ```bash
-cd ~/SNOVIL/tensorflow_docker/Docker
+cd ~/SNOVIL/tensorflow_docker
 # If CPU
 docker build -t ml_fsi_cpu -f ./TensorFlow_CPU.Dockerfile .
 # If GPU
