@@ -1,0 +1,3 @@
+
+# alias for tensorflow docker image of https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker
+tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu python "$1" }

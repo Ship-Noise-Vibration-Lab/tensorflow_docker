@@ -13,7 +13,7 @@
 * [Install Docker](#Install-Docker)
   * [For CPU Version](#For-CPU-Version)
   * [For GPU Version](#For-GPU-Version)
-* [Build and Run](#Build-and-Run)
+* [ Run Tensorflow](#Run-Tensorflow)
 
 ***
 
@@ -194,21 +194,24 @@
   sudo docker run -it --rm --runtime=nvidia --gpus=all --pid=host nvtop
   ```
 
-# Pull Docker image from Docker Hub and run
+# Run Tensorflow
 
 - Add alias to `.bashrc` to run docker'd tensorflow easily
 
   ```bash
   # If CPU
-  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_CPU && cat bash_alias_CPU >> ~/.bashrc && rm bash_alias_CPU &&source ~/.bashrc
   # If GPU
-  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_GPU && cat bash_alias_GPU >> ~/.bashrc && rm bash_alias_GPU &&source ~/.bashrc
   ```
 
 - Test with,
 
   ```bash
-  tensorflow bash
+  # Download init_bash.py for testing
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/init_bash.py
+  # Run init_bash.py for testing
+  tensorflow init_bash.py
   ```
 
   You should see something like this,
@@ -224,6 +227,15 @@
   which should map to the ID and group for your user on the Docker host. Great!
 
   tf_docker@f3922c96fc9c:~/tf_ws$
+  ```
+
+- How to use with your own tensorflow python scripts
+
+  You can run any tensorflow python script with following command
+
+  ```bash
+  # if your tensorflow python script is myscript.py
+  tensorflow myscript.py
   ```
 
 # (For Development) Build and Run
@@ -245,9 +257,9 @@
   ```bash
   cd ~/SNOVIL/tensorflow_docker
   # If CPU
-  docker build -t tensorflow_docker -f ./TensorFlow_CPU.Dockerfile .
+  docker build -t tensorflow_docker:cpu -f ./TensorFlow_CPU.Dockerfile .
   # If GPU
-  docker build -t tensorflow_docker -f ./TensorFlow_GPU.Dockerfile .
+  docker build -t tensorflow_docker:gpu -f ./TensorFlow_GPU.Dockerfile .
   ```
 
 - Test
@@ -256,9 +268,9 @@
 
   ```bash
   # If CPU
-  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker bash
+  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu bash
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python  bash
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python  bash
   ```
 
   You should see something like this,
@@ -284,7 +296,9 @@
   ```bash
   # At directory where your python script is, (here it's Cylinder2D.py for example)
   # If CPU
-  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
+  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu python ./Cylinder2D.py
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python ./Cylinder2D.py
   ```
+
+# (For Development) Build and Run
