@@ -197,10 +197,10 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
   ```bash
   # If CPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_CPU \
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_CPU \
     && cat sh_alias_CPU >> ~/.bashrc && rm sh_alias_CPU && source ~/.bashrc
   # If GPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_GPU \
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_GPU \
     && cat sh_alias_GPU >> ~/.bashrc && rm sh_alias_GPU && source ~/.bashrc
   ```
 
@@ -209,10 +209,10 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
   ```bash
   # If CPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_CPU \
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_CPU \
     && cat sh_alias_CPU >> ~/.zshrc && rm sh_alias_CPU && source ~/.zshrc
   # If GPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_GPU \
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_GPU \
     && cat sh_alias_GPU >> ~/.zshrc && rm sh_alias_GPU && source ~/.zshrc
   ```
 
@@ -283,9 +283,9 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
   ```bash
   cd ~/SNOVIL/tensorflow_docker
   # If CPU
-  docker build -t tensorflow_docker:cpu -f ./TensorFlow_CPU.Dockerfile .
+  docker build -t tensorflow_docker:cpu -f ./Dockerfile/TensorFlow_CPU.Dockerfile .
   # If GPU
-  docker build -t tensorflow_docker:gpu -f ./TensorFlow_GPU.Dockerfile .
+  docker build -t tensorflow_docker:gpu -f ./Dockerfile/TensorFlow_GPU.Dockerfile .
   ```
 
 - Test
@@ -325,11 +325,11 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
   at the directory where the python script is,
 
   ```bash
-  # At directory where your python script is, (here it's Cylinder2D.py for example)
+  # At directory where your python script is, (here it's `scripts/cnn_test.py` for example)
   # If CPU
-  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu python ./Cylinder2D.py
+  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu python scripts/cnn_test.py
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python ./Cylinder2D.py
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python scripts/cnn_test.py
   ```
 
 # CPU vs Single GPU Benchmark
