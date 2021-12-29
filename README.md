@@ -328,9 +328,17 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
   ```bash
   # At directory where your python script is, (here it's `scripts/cnn_test.py` for example)
   # If CPU
-  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu python scripts/cnn_test.py
+  docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host \
+      --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $PWD:/home/tf_docker/tf_ws \
+      -v ~/.ssh:/home/tf_docker/.ssh:ro \
+      -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu \
+      python scripts/cnn_test.py
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python scripts/cnn_test.py
+  docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host \
+      --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $PWD:/home/tf_docker/tf_ws \
+      -v ~/.ssh:/home/tf_docker/.ssh:ro --gpus all --runtime=nvidia \
+      -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu \
+      python scripts/cnn_test.py
   ```
 
 # CPU vs Single GPU Benchmark
