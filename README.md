@@ -19,7 +19,7 @@
 
 # System requirements
 
-- Ubuntu 20.04 or Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11
+- Ubuntu 18.04/20.04 or Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11
 - (For GPU version) NVIDIA GPU capable of CUDA 11.2 and its drivers
 
 # Prerequisite
@@ -109,6 +109,9 @@
   sudo usermod -aG docker $USER
   newgrp docker
 
+  # If you are running on WSL2 at Windows machine
+  # Run this command to autostart docker
+  echo "[boot]\ncommand = service docker start" | sudo tee -a /etc/wsl.conf
   ```
 
 - To test docker, run this commands at a new terminal window
@@ -142,9 +145,10 @@
 
   And restart docker
 
-  ```
-  sudo systemctl stop docker
-  sudo systemctl start docker
+  ```bash
+  sudo systemctl restart docker
+  # If on WSL2 at Windows Machine
+  sudo service docker restart
   ```
 
 - Test docker with nvidia gpu
@@ -190,7 +194,41 @@
   sudo docker run -it --rm --runtime=nvidia --gpus=all --pid=host nvtop
   ```
 
-# Build and Run
+# Pull Docker image from Docker Hub and run
+
+- Add alias to `.bashrc` to run docker'd tensorflow easily
+
+  ```bash
+  # If CPU
+  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
+  # If GPU
+  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
+  ```
+
+- Test with,
+
+  ```bash
+  tensorflow bash
+  ```
+
+  You should see something like this,
+
+  ```bash
+  ________                               _______________
+  ___  __/__________________________________  ____/__  /________      __
+  __  /  _  _ \_  __ \_  ___/  __ \_  ___/_  /_   __  /_  __ \_ | /| / /
+  _  /   /  __/  / / /(__  )/ /_/ /  /   _  __/   _  / / /_/ /_ |/ |/ /
+  /_/    \___//_/ /_//____/ \____//_/    /_/      /_/  \____/____/|__/
+
+  You are running this container as user with ID 1000 and group 1000,
+  which should map to the ID and group for your user on the Docker host. Great!
+
+  tf_docker@f3922c96fc9c:~/ws$
+  ```
+
+
+
+# (For Development) Build and Run
 
 - Clone this repository
 
@@ -209,9 +247,36 @@
   ```bash
   cd ~/SNOVIL/tensorflow_docker
   # If CPU
-  docker build -t ml_fsi_cpu -f ./TensorFlow_CPU.Dockerfile .
+  docker build -t tensorflow_docker -f ./TensorFlow_CPU.Dockerfile .
   # If GPU
-  docker build -t ml_fsi_gpu -f ./TensorFlow_GPU.Dockerfile .
+  docker build -t tensorflow_docker -f ./TensorFlow_GPU.Dockerfile .
+  ```
+
+- Test
+
+  at the directory where the python script is,
+
+  ```bash
+  # If CPU
+  docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker bash
+  # If GPU
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python  bash
+  ```
+
+  You should see something like this,
+
+  ```bash
+  ________                               _______________
+  ___  __/__________________________________  ____/__  /________      __
+  __  /  _  _ \_  __ \_  ___/  __ \_  ___/_  /_   __  /_  __ \_ | /| / /
+  _  /   /  __/  / / /(__  )/ /_/ /  /   _  __/   _  / / /_/ /_ |/ |/ /
+  /_/    \___//_/ /_//____/ \____//_/    /_/      /_/  \____/____/|__/
+
+  You are running this container as user with ID 1000 and group 1000,
+  which should map to the ID and group for your user on the Docker host. Great!
+
+  tf_docker@f3922c96fc9c:~/ws$
+
   ```
 
 - Run Docker image with a python script
@@ -221,7 +286,7 @@
   ```bash
   # At directory where your python script is, (here it's Cylinder2D.py for example)
   # If CPU
-  docker run -it --rm -v $PWD:/tmp -w /tmp ml_fsi_cpu python ./Cylinder2D.py
+  docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/tmp -w /tmp ml_fsi_gpu python ./Cylinder2D.py
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
   ```
