@@ -68,18 +68,24 @@
     ```bash
     OpenGL vendor string: Microsoft Corporation
     OpenGL renderer string: D3D12 (NVIDIA GeForce GTX 1660 Ti)
-    OpenGL core profile version string: 3.3 (Core Profile) Mesa 21.0.3 - kisak-mesa PPA
     ```
-    If not, do
+
+    If NOT, do
 
     ```bash
     sudo add-apt-repository ppa:kisak/kisak-mesa && sudo apt-get update && sudo apt dist-upgrade
     ```
 
+### Important note for WSL2 in Windows Machine users
+Using docker in WSL2 can eat up disk drive space very fast. It's becasue the expanded virtual drive of the WSL2 is not being reduced when it restarts. You may try pruning the docker images and containers. And compating the virtual disk size using diskpart.
+
+
 ## For Ubuntu Machine
+
 ### (For GPU version) Set proprietrary NVIDIA graphics driver
+
 - If you are running only with CPUs, you do not need this
-- Choose `[proprietrary, tested]` driver on Additional Derivers at Software & Updates. For example, `nvidia-driver-460`
+- Choose `[proprietrary, tested]` driver on Additional Derivers at Software & Updates. For example, `nvidia-driver-460` or `nvidia-driver-510`
 - To test the correct installation,
 
   ```
@@ -119,9 +125,6 @@
   ```bash
   # Test docker
   docker run hello-world
-
-  # Test Tensorflow
-  docker run -it tensorflow/tensorflow bash
   ```
 
 ## For GPU version
@@ -132,9 +135,6 @@
 
   ```bash
   curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
-  distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-  curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list |\
-      sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
   distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
     && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \
     && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
@@ -161,14 +161,14 @@
 
   ```bash
   +-----------------------------------------------------------------------------+
-  | NVIDIA-SMI 460.91.03    Driver Version: 460.91.03    CUDA Version: 11.2     |
+  | NVIDIA-SMI 510.00       Driver Version: 510.06       CUDA Version: 11.6     |
   |-------------------------------+----------------------+----------------------+
   | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
   | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
   |                               |                      |               MIG M. |
   |===============================+======================+======================|
-  |   0  Quadro RTX 3000...  Off  | 00000000:01:00.0 Off |                  N/A |
-  | N/A   77C    P0    65W /  N/A |   5054MiB /  5934MiB |     99%      Default |
+  |   0  NVIDIA GeForce ...  On   | 00000000:01:00.0  On |                  N/A |
+  | 23%   55C    P0   108W / 260W |   1869MiB / 11264MiB |     N/A      Default |
   |                               |                      |                  N/A |
   +-------------------------------+----------------------+----------------------+
 
@@ -177,13 +177,8 @@
   |  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
   |        ID   ID                                                   Usage      |
   |=============================================================================|
+  |  No running processes found                                                 |
   +-----------------------------------------------------------------------------+
-  ```
-
-- Test Tensorflow with gpu
-
-  ```bash
-  docker run --gpus all -it tensorflow/tensorflow:latest-gpu bash
   ```
 
 - (Optional) For GPU status monitoring
@@ -200,9 +195,11 @@
 
   ```bash
   # If CPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_CPU && cat bash_alias_CPU >> ~/.bashrc && rm bash_alias_CPU &&source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_CPU \
+    && cat bash_alias_CPU >> ~/.bashrc && rm bash_alias_CPU && source ~/.bashrc
   # If GPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_GPU && cat bash_alias_GPU >> ~/.bashrc && rm bash_alias_GPU &&source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_GPU \
+    && cat bash_alias_GPU >> ~/.bashrc && rm bash_alias_GPU && source ~/.bashrc
   ```
 
 - Test with,
@@ -238,7 +235,21 @@
   tensorflow myscript.py
   ```
 
-# (For Development) Build and Run
+## Note
+- If you see warning message when running the script as follows,
+  ```bash
+  could not open file to read NUMA node: /sys/bus/pci/devices/0000:01:00.0/numa_node
+  Your kernel may have been built without NUMA support.
+  ```
+
+  Just ignore it. As long as you have msg like below at the end of those warnings, you should be ok.
+
+  ```bash
+  Created device /job:localhost/replica:0/task:0/device:GPU:0 with 8922 MB memory:
+   -> device: 0, name: NVIDIA GeForce RTX 2080 Ti, pci bus id: 0000:01:00.0, compute capability: 7.5
+  ```
+
+# (For Development, Depreciated) Build and Run
 
 - Clone this repository
 
@@ -270,7 +281,7 @@
   # If CPU
   docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu bash
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python  bash
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu bash
   ```
 
   You should see something like this,
@@ -301,4 +312,41 @@
   docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu python ./Cylinder2D.py
   ```
 
-# (For Development) Build and Run
+# CPU vs Single GPU Benchmark
+
+## Performance benchmark using cpu_vs_gpu.py for CNN training
+- Setting
+  ```bash
+  _________________________________________________________________
+  Layer (type)                Output Shape              Param #
+  =================================================================
+  input_1 (InputLayer)        [(None, 28, 28, 1)]       0
+  conv2d (Conv2D)             (None, 28, 28, 32)        320
+  max_pooling2d               (None, 14, 14, 32)        0
+  conv2d_1 (Conv2D)           (None, 14, 14, 64)        18496
+  max_pooling2d_1             (None, 7, 7, 64)          0
+  conv2d_2 (Conv2D)           (None, 7, 7, 128)         73856
+  max_pooling2d_2             (None, 4, 4, 128)         0
+  flatten (Flatten)           (None, 2048)              0
+  dense (Dense)               (None, 256)               524544
+  dropout (Dropout)           (None, 256)               0
+  dense_1 (Dense)             (None, 10)                2570
+  ```
+
+- CPU (Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz)
+
+  ```bash
+  Test loss: 0.02308735065162182
+  Test accuracy: 0.991599977016449
+  Computation time: 0:01:15.597915
+  ```
+
+- GPU (NVIDIA GeForce RTX 2080 Ti, with 8922 MB memory)
+
+  ```bash
+  Test loss: 0.021529724821448326
+  Test accuracy: 0.9933000206947327
+  Computation time: 0:00:21.897822
+  ```
+
+  About x4 with GPU for current case
