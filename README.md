@@ -13,7 +13,8 @@
 * [Install Docker](#Install-Docker)
   * [For CPU Version](#For-CPU-Version)
   * [For GPU Version](#For-GPU-Version)
-* [ Run Tensorflow](#Run-Tensorflow)
+* [Install Alias](#Install-Alias)
+* [Run Tensorflow](#Run-Tensorflow)
 
 ***
 
@@ -189,7 +190,7 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
   sudo docker run -it --rm --runtime=nvidia --gpus=all --pid=host nvtop
   ```
 
-# Run Tensorflow
+# Install alias
 
 ## For bash
 - Add alias to `.bashrc` to run docker'd tensorflow easily
@@ -215,8 +216,9 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
     && cat sh_alias_GPU >> ~/.zshrc && rm sh_alias_GPU && source ~/.zshrc
   ```
 
-## Final testing
-- Test with,
+# Run Tensorflow
+
+- Run tensorflow with,
 
   ```bash
   tensorflow_bash
