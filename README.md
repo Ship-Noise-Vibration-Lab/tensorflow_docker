@@ -55,7 +55,7 @@
 
 - If you are running only with CPUs, you do not need this
 - Download and install NVIDIA Driver for WSL2
-  - [CUDA on Windows Subsystem for Linux (WSL)](https://developer.nvidia.com/cuda/wsl)
+  - [CUDA on Windows Subsystem for Linux (WSL)](https://developer.nvidia.com/cuda/tf_wsl)
 - Check configuration for NVIDIA Graphics Card
   - Run this command inside Ubuntu 20.04 in WSL2
 
@@ -111,7 +111,7 @@
 
   # If you are running on WSL2 at Windows machine
   # Run this command to autostart docker
-  echo "[boot]\ncommand = service docker start" | sudo tee -a /etc/wsl.conf
+  echo "[boot]\ncommand = service docker start" | sudo tee -a /etc/tf_wsl.conf
   ```
 
 - To test docker, run this commands at a new terminal window
@@ -200,9 +200,9 @@
 
   ```bash
   # If CPU
-  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
+  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
   # If GPU
-  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
+  echo "tensorflow() { docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu python "$1" } | tee -a ~/.bashrc && source ~/.bashrc
   ```
 
 - Test with,
@@ -223,10 +223,8 @@
   You are running this container as user with ID 1000 and group 1000,
   which should map to the ID and group for your user on the Docker host. Great!
 
-  tf_docker@f3922c96fc9c:~/ws$
+  tf_docker@f3922c96fc9c:~/tf_ws$
   ```
-
-
 
 # (For Development) Build and Run
 
@@ -258,9 +256,9 @@
 
   ```bash
   # If CPU
-  docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker bash
+  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker bash
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python  bash
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python  bash
   ```
 
   You should see something like this,
@@ -275,7 +273,7 @@
   You are running this container as user with ID 1000 and group 1000,
   which should map to the ID and group for your user on the Docker host. Great!
 
-  tf_docker@f3922c96fc9c:~/ws$
+  tf_docker@f3922c96fc9c:~/tf_ws$
 
   ```
 
@@ -286,7 +284,7 @@
   ```bash
   # At directory where your python script is, (here it's Cylinder2D.py for example)
   # If CPU
-  docker run -it --rm -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
+  docker run -it --rm -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
   # If GPU
-  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/ws -w /home/tf_docker/ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
+  docker run -it --rm --gpus all -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker python ./Cylinder2D.py
   ```
