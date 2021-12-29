@@ -205,10 +205,7 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 - Test with,
 
   ```bash
-  # Download init_bash.py for testing
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/init_bash.py
-  # Run init_bash.py for testing
-  tensorflow init_bash.py
+  tensorflow_bash
   ```
 
   You should see something like this,
@@ -225,6 +222,8 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
   tf_docker@f3922c96fc9c:~/tf_ws$
   ```
+
+  Type `exit` to exit from docker container
 
 - How to use with your own tensorflow python scripts
 
@@ -249,7 +248,7 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
    -> device: 0, name: NVIDIA GeForce RTX 2080 Ti, pci bus id: 0000:01:00.0, compute capability: 7.5
   ```
 
-# (For Development, Depreciated) Build and Run
+# (For Development) Build and Run
 
 - Clone this repository
 

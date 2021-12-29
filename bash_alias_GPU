@@ -1,5 +1,8 @@
 
 # alias for tensorflow docker image of https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker
 function tensorflow() {
-   docker run --gpus all --runtime=nvidia -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow/tensorflow:latest-gpu-jupyter python "$1"
+   docker run --gpus all --runtime=nvidia -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu python "$1"
+}
+function tensorflow_bash() {
+   docker run --gpus all --runtime=nvidia -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:gpu bash
 }
