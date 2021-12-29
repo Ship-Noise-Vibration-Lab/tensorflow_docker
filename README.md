@@ -197,11 +197,11 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
   ```bash
   # If CPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_CPU \
-    && cat sh_alias_CPU >> ~/.bashrc && rm sh_alias_CPU && source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_CPU -P ~/ \
+    && cat ~/sh_alias_CPU >> ~/.bashrc && rm ~/sh_alias_CPU && source ~/.bashrc
   # If GPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_GPU \
-    && cat sh_alias_GPU >> ~/.bashrc && rm sh_alias_GPU && source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_GPU -P ~/ \
+    && cat ~/sh_alias_GPU >> ~/.bashrc && rm ~/sh_alias_GPU && source ~/.bashrc
   ```
 
 ## For zsh
@@ -209,11 +209,11 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
   ```bash
   # If CPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_CPU \
-    && cat sh_alias_CPU >> ~/.zshrc && rm sh_alias_CPU && source ~/.zshrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_CPU -P ~/ \
+    && cat ~/sh_alias_CPU >> ~/.zshrc && rm ~/sh_alias_CPU && source ~/.zshrc
   # If GPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_GPU \
-    && cat sh_alias_GPU >> ~/.zshrc && rm sh_alias_GPU && source ~/.zshrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias/sh_alias_GPU -P ~/ \
+    && cat ~/sh_alias_GPU >> ~/.zshrc && rm ~/sh_alias_GPU && source ~/.zshrc
   ```
 
 # Run Tensorflow
