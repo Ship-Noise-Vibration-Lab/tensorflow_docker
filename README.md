@@ -191,17 +191,31 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
 # Run Tensorflow
 
+## For bash
 - Add alias to `.bashrc` to run docker'd tensorflow easily
 
   ```bash
   # If CPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_CPU \
-    && cat bash_alias_CPU >> ~/.bashrc && rm bash_alias_CPU && source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_CPU \
+    && cat sh_alias_CPU >> ~/.bashrc && rm sh_alias_CPU && source ~/.bashrc
   # If GPU
-  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/bash_alias_GPU \
-    && cat bash_alias_GPU >> ~/.bashrc && rm bash_alias_GPU && source ~/.bashrc
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_GPU \
+    && cat sh_alias_GPU >> ~/.bashrc && rm sh_alias_GPU && source ~/.bashrc
   ```
 
+## For zsh
+- Add alias to `.zshrc` to run docker'd tensorflow easily
+
+  ```bash
+  # If CPU
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_CPU \
+    && cat sh_alias_CPU >> ~/.zshrc && rm sh_alias_CPU && source ~/.zshrc
+  # If GPU
+  wget https://raw.githubusercontent.com/Ship-Noise-Vibration-Lab/tensorflow_docker/main/sh_alias_GPU \
+    && cat sh_alias_GPU >> ~/.zshrc && rm sh_alias_GPU && source ~/.zshrc
+  ```
+
+## Final testing
 - Test with,
 
   ```bash
@@ -279,10 +293,13 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
   ```bash
   # If CPU
   docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host \
-      -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu bash
+      --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $PWD:/home/tf_docker/tf_ws \
+      -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:cpu bash
   # If GPU
   docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host \
-      --gpus all --runtime=nvidia -v $PWD:/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu bash
+      --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v $PWD:/home/tf_docker/tf_ws \
+      --gpus all --runtime=nvidia \
+      -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) tensorflow_docker:gpu bash
   ```
 
   You should see something like this,

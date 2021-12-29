@@ -19,14 +19,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-# Add user
-ARG USER_ID=1000
-ARG GROUP_ID=1000
-RUN groupadd -g ${GROUP_ID} tf_docker \
- && useradd -ms /bin/bash tf_docker -g tf_docker
-
-# Give sudo permission
+# Add user and give sudo permission
 RUN adduser --disabled-password --gecos "" tf_docker \
  && echo 'tf_docker:tf_docker' | chpasswd \
- && adduser user sudo \
- && echo 'user ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+ && adduser tf_docker sudo \
+ && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER tf_docker
