@@ -1,8 +1,8 @@
 
 # alias for tensorflow docker image of https://github.com/Ship-Noise-Vibration-Lab/tensorflow_docker
 function tensorflow() {
-   docker pull woensugchoi/tensorflow_docker:cpu && docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v ~/.ssh:/home/tf_docker/.ssh:ro -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu python "$1"
+   docker pull woensugchoi/tensorflow_docker:cpu >/dev/null && docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v ~/.ssh:/home/tf_docker/.ssh:ro -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu python "$1"
 }
 function tensorflow_bash() {
-   docker pull woensugchoi/tensorflow_docker:cpu && docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v ~/.ssh:/home/tf_docker/.ssh:ro -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu bash
+   docker pull woensugchoi/tensorflow_docker:cpu >/dev/null  && docker run -it --rm --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --net=host --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" -v ~/.ssh:/home/tf_docker/.ssh:ro -v $(pwd):/home/tf_docker/tf_ws -w /home/tf_docker/tf_ws -u $(id -u ${USER}):$(id -g ${USER}) woensugchoi/tensorflow_docker:cpu bash
 }
