@@ -118,13 +118,14 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
 
   # If you are running on WSL2 at Windows machine
   # Run this command to autostart docker
-  echo "[boot]\ncommand = service docker start" | sudo tee -a /etc/tf_wsl.conf
+  echo "[boot]\n command = service docker start" | sudo tee -a /etc/wsl.conf
   ```
 
 - To test docker, run this commands at a new terminal window
 
   ```bash
   # Test docker
+  sudo service docker start
   docker run hello-world
   ```
 
