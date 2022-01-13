@@ -112,9 +112,15 @@ Using docker in WSL2 can eat up disk drive space very fast. It's becasue the exp
     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   sudo apt-get update
   sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+  # Add docker group and previledges to use without sudo
   sudo groupadd docker
   sudo usermod -aG docker $USER
   newgrp docker
+
+  # Add default docker configuration
+  docker config --global user.name "YOUR NAME"
+  docker config --global user.email "YOUR@EMAIL.COM"
 
   # If you are running on WSL2 at Windows machine
   # Run this command to autostart docker
